@@ -1,16 +1,16 @@
 {
-  "name": "qr-scanner",
+  "name": "qr-scanner-x",
   "version": "1.2.0",
   "description": "A javascript QR scanner library",
-  "main": "qr-scanner.umd.min.js",
+  "main": "qr-scanner-x.umd.min.js",
   "module": "src/qr-scanner.js",
   "types": "types/qr-scanner.d.ts",
   "files": [
     "LICENSE",
-    "qr-scanner.min.js",
-    "qr-scanner.min.js.map",
-    "qr-scanner.umd.min.js",
-    "qr-scanner.umd.min.js.map",
+    "qr-scanner-x.min.js",
+    "qr-scanner-x.min.js.map",
+    "qr-scanner-x.umd.min.js",
+    "qr-scanner-x.umd.min.js.map",
     "qr-scanner-worker.min.js",
     "qr-scanner-worker.min.js.map",
     "src/qr-scanner.js",
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nimiq/qr-scanner.git"
+    "url": "git+https://github.com/wuyax/qr-scanner.git"
   },
   "keywords": [
     "qr",
@@ -34,12 +34,12 @@
     "fast",
     "web"
   ],
-  "author": "Nimiq (https://nimiq.com)",
+  "author": "wuyax",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nimiq/qr-scanner/issues"
+    "url": "https://github.com/wuyax/qr-scanner/issues"
   },
-  "homepage": "https://github.com/nimiq/qr-scanner#readme",
+  "homepage": "https://github.com/wuyax/qr-scanner#readme",
   "devDependencies": {
     "@ampproject/rollup-plugin-closure-compiler": "^0.26.0",
     "acorn": "^7.3.1",

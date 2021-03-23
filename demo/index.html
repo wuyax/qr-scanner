@@ -1,68 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>QR Scanner Demo</title>
+  <meta charset="UTF-8">
+  <title>QR Scanner Demo</title>
 </head>
+
 <body>
-<style>
+  <style>
     hr {
-        margin-top: 32px;
+      margin-top: 32px;
     }
+
     input[type="file"] {
-        display: block;
-        margin-bottom: 16px;
+      display: block;
+      margin-bottom: 16px;
     }
+
     div {
-        margin-bottom: 16px;
+      margin-bottom: 16px;
     }
+
     #flash-toggle {
-        display: none;
+      display: none;
     }
-</style>
-<h1>Scan from WebCam:</h1>
-<div>
+  </style>
+  <h1>Scan from WebCam:</h1>
+  <div>
     <b>Device has camera: </b>
     <span id="cam-has-camera"></span>
     <br>
     <b>Device has flash: </b>
     <span id="cam-has-flash"></span>
     <br>
+    <div>
+      <select name="cam" id="choose-cam"></select>
+    </div>
     <video id="qr-video"></video>
     <br>
     <label>
-        <input id="show-scan-region" type="checkbox">
-        Show scan region
+      <input id="show-scan-region" type="checkbox">
+      Show scan region
     </label>
-</div>
-<div>
+  </div>
+  <div>
     <button id="flash-toggle">📸 Flash: <span id="flash-state">off</span></button>
-</div>
-<div>
+  </div>
+  <div>
     <select id="inversion-mode-select">
-        <option value="original">Scan original (dark QR code on bright background)</option>
-        <option value="invert">Scan with inverted colors (bright QR code on dark background)</option>
-        <option value="both">Scan both</option>
+      <option value="original">Scan original (dark QR code on bright background)</option>
+      <option value="invert">Scan with inverted colors (bright QR code on dark background)</option>
+      <option value="both">Scan both</option>
     </select>
     <br>
-</div>
-<b>Detected QR code: </b>
-<span id="cam-qr-result">None</span>
-<br>
-<b>Last detected at: </b>
-<span id="cam-qr-result-timestamp"></span>
-<br>
-<button id="start-button">Start</button>
-<button id="stop-button">Stop</button>
-<hr>
+  </div>
+  <b>Detected QR code: </b>
+  <span id="cam-qr-result">None</span>
+  <br>
+  <b>Last detected at: </b>
+  <span id="cam-qr-result-timestamp"></span>
+  <br>
+  <button id="start-button">Start</button>
+  <button id="stop-button">Stop</button>
+  <hr>
 
-<h1>Scan from File:</h1>
-<input type="file" id="file-selector">
-<b>Detected QR code: </b>
-<span id="file-qr-result">None</span>
+  <h1>Scan from File:</h1>
+  <input type="file" id="file-selector">
+  <b>Detected QR code: </b>
+  <span id="file-qr-result">None</span>
 
-<script type="module">
-    import QrScanner from "../qr-scanner.min.js";
+  <script type="module">
+    import QrScanner from "../qr-scanner-x.min.js";
     QrScanner.WORKER_PATH = '../qr-scanner-worker.min.js';
 
     const video = document.getElementById('qr-video');
@@ -71,6 +79,7 @@
     const flashToggle = document.getElementById('flash-toggle');
     const flashState = document.getElementById('flash-state');
     const camQrResult = document.getElementById('cam-qr-result');
+    const camSelect = document.getElementById('choose-cam');
     const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
     const fileSelector = document.getElementById('file-selector');
     const fileQrResult = document.getElementById('file-qr-result');
@@ -87,7 +96,7 @@
 
     QrScanner.hasCamera().then(hasCamera => camHasCamera.textContent = hasCamera);
 
-    const scanner = new QrScanner(video, result => setResult(camQrResult, result), error => {
+    const scanner = await QrScanner.create(video, result => setResult(camQrResult, result), error => {
         camQrResult.textContent = error;
         camQrResult.style.color = 'inherit';
     });
@@ -102,7 +111,31 @@
             }
         });
     });
+    
+    const activeDeviceId = qrScanner.activeDeviceId
+    const cams = scanner.cams.map((cam) => {
+      let camOption = {active: false}
+        camOption.deviceId = cam.deviceId
+        camOption.text = cam.label
+        camOption.className = ''
+        if (cam.deviceId === activeDeviceId) {
+          camOption.active = true
+        }
+        return camOption
+    })
 
+    for (let i = 0; i < cams.length; i++) {
+      let option=document.createElement("option");
+      option.setAttribute("value",cams[i].deviceId);
+      option.appendChild(document.createTextNode(cams[i].label));
+      option.selected = cams[i].active
+      camSelect.appendChild(option);
+    }
+
+    camSelect.addEventListener('change', (e) => {
+      const deviceId = e.target.value
+      scanner.restart(deviceId)
+    })
     // for debugging
     window.scanner = scanner;
 
@@ -139,4 +172,5 @@
 
 </script>
 </body>
+
 </html>

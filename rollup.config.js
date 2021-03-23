@@ -5,12 +5,12 @@ export default [{
     // library
     input: 'src/qr-scanner.js',
     output: [{
-        file: 'qr-scanner.min.js',
+        file: 'qr-scanner-x.min.js',
         format: 'esm',
         interop: false,
         sourcemap: true,
     }, {
-        file: 'qr-scanner.umd.min.js',
+        file: 'qr-scanner-x.umd.min.js',
         format: 'umd',
         name: 'QrScanner',
         interop: false,
@@ -18,7 +18,7 @@ export default [{
     }],
     plugins: [
         closureCompiler({
-            language_in: 'ECMASCRIPT6',
+            language_in: 'ECMASCRIPT_2017',
             language_out: 'ECMASCRIPT6',
             rewrite_polyfills: false,
         })
